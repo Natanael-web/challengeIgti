@@ -1,5 +1,6 @@
 import { db } from '../models/index.js';
 import { logger } from '../config/logger.js';
+import { gradeModel } from '../models/gradeModel.js';
 
 const create = async (req, res) => {
   try {
@@ -22,6 +23,8 @@ const findAll = async (req, res) => {
     : {};
 
   try {
+    const grade = await gradeModel.find({});
+    res.send(grade);
     logger.info(`GET /grade`);
   } catch (error) {
     res
