@@ -11,6 +11,7 @@ import { gradeModel } from './models/gradeModel.js';
     await db.mongoose.connect(db.url, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
+      useFindAndModify: true,
     });
   } catch (error) {
     process.exit();

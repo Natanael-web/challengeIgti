@@ -4,7 +4,9 @@ import { gradeModel } from '../models/gradeModel.js';
 
 const create = async (req, res) => {
   try {
-    res.send({ message: 'Grade inserido com sucesso' });
+    const grade = new gradeModel(req.body);
+    await grade.save();
+    res.send({ message: 'Grade inserted successfully' });
     logger.info(`POST /grade - ${JSON.stringify()}`);
   } catch (error) {
     res
@@ -36,8 +38,10 @@ const findAll = async (req, res) => {
 
 const findOne = async (req, res) => {
   const id = req.params.id;
-
+  const name = req.params.name;
   try {
+    const grade = await gradeModel.find({name: name});
+    res.send(grade);
     logger.info(`GET /grade - ${id}`);
   } catch (error) {
     res.status(500).send({ message: 'Erro ao buscar o Grade id: ' + id });
@@ -55,6 +59,8 @@ const update = async (req, res) => {
   const id = req.params.id;
 
   try {
+    const grade = await gradeModel.findByIdAndUpdate({_id: id}, req.body, {new: true,});
+    res.send(grade);
     logger.info(`PUT /grade - ${id} - ${JSON.stringify(req.body)}`);
   } catch (error) {
     res.status(500).send({ message: 'Erro ao atualizar a Grade id: ' + id });
@@ -64,13 +70,16 @@ const update = async (req, res) => {
 
 const remove = async (req, res) => {
   const id = req.params.id;
+  const name = req.params.name;
 
   try {
+    const grade = await gradeModel.findOneAndDelete({name: name});
+    res.send(grade);
     logger.info(`DELETE /grade - ${id}`);
   } catch (error) {
     res
       .status(500)
-      .send({ message: 'Nao foi possivel deletar o Grade id: ' + id });
+      .send({ message: 'Nao foi possivel deletar o Grade name: ' + name });
     logger.error(`DELETE /grade - ${JSON.stringify(error.message)}`);
   }
 };
